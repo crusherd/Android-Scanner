@@ -12,18 +12,18 @@ import dev.moco.browser.Scanner.R;
  * @author Robert Danczak
  *
  */
-public class HistoryFragment extends Fragment {
+public class BarcodeFragment extends Fragment {
 
 
-    public HistoryFragment() {
-
+    public BarcodeFragment() {
+        // TODO Auto-generated constructor stub
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated
         // properly.
-        final View rootView = inflater.inflate(R.layout.fragment_history, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_barcode, container, false);
         return rootView;
     }
 }

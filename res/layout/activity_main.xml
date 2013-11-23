@@ -2,5 +2,4 @@
     android:id="@+id/pager"
     style="@style/AppTheme"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:keepScreenOn="true" />
+    android:layout_height="match_parent" />

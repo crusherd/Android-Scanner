@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Scanner</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="barcode">Barcode</string>
+    <string name="qr_code">QR-Code</string>
+    <string name="history">Verlauf</string>
+    <string name="make_scan">Scannen</string>
+</resources>

@@ -4,4 +4,8 @@
     <string name="action_settings">Settings</string>
     <string name="barcode">Barcode</string>
     <string name="qr_code">QR-Code</string>
+    <string name="history">History</string>
+    <string name="make_scan">Scan</string>
+    <string name="error_page_title_not_found">Error: Page title not found!</string>
+    <string name="error_fragment_not_found">Error: Selected fragment not found!</string>
 </resources>
