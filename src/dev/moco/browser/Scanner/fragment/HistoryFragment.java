@@ -15,10 +15,6 @@ import dev.moco.browser.Scanner.R;
 public class HistoryFragment extends Fragment {
 
 
-    public HistoryFragment() {
-
-    }
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated

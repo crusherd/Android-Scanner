@@ -8,4 +8,5 @@
     <string name="make_scan">Scan</string>
     <string name="error_page_title_not_found">Error: Page title not found!</string>
     <string name="error_fragment_not_found">Error: Selected fragment not found!</string>
+    <string name="error_button_not_found">Requested button not found!</string>
 </resources>

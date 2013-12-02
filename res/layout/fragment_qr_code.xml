@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SurfaceView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
-</SurfaceView>
+    android:layout_height="match_parent"
+    tools:context=".fragment.QRFragment" >
+    <Button
+        android:id="@+id/qr_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:inputType="none"
+        android:lines="1"
+        android:longClickable="false"
+        android:maxLines="1"
+        android:onClick="onClick"
+        android:scrollbars="none"
+        android:text="@string/make_scan"
+        android:typeface="normal" />
+</RelativeLayout>

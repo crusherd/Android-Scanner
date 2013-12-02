@@ -1,8 +1,7 @@
 package dev.moco.browser.Scanner;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -11,19 +10,19 @@ import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 import dev.moco.browser.Scanner.adapter.ScannerPagerAdapter;
+import dev.moco.browser.Scanner.fragment.QRFragment;
 
 /**
- *
+ * Main entry point for the "Scanner"-app.
  * @author Robert Danczak
- *
  */
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private Context context = null;
-    private Camera camera = null;
     private ActionBar actionbar = null;
 
     // When requested, this adapter returns a HistoryFragment, BarcodeFragment or QRFragment.
@@ -51,6 +50,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		actionbar.setDisplayShowTitleEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(false);
 
+		actionbar.setDisplayHomeAsUpEnabled(false);
+        actionbar.setDisplayUseLogoEnabled(false);
+
 		// ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
 		scannerPagerAdapter = new ScannerPagerAdapter(getSupportFragmentManager(), context);
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -72,42 +74,40 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 	}
 
-	@Override
-    public void onResume() {
-	    super.onResume();
-	}
-
+	/**
+	 * deactivate context options menu
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 
-		return true;
+		return false;
 	}
 
 	/**
-	 * Check for camera, flash and autofocus
-	 * @return true if present, false otherwise
+	 * Called if the user presses either the barcode or QR-Code button.
+	 * @param view - initiating view
 	 */
-	private boolean checkCameraHardware() {
-	    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) &&
-	        context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS) &&
-	        context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-	        return true;
-	    } else {
-	        return false;
-	    }
+	public void onClick(final View view) {
+	    switch (view.getId()) {
+            case R.id.qr_button:
+                final QRFragment fragment = (QRFragment) scannerPagerAdapter.getItem(2);
+                fragment.onClick(view);
+                break;
+            default:
+                final String err = getString(R.string.error_button_not_found);
+                Toast.makeText(context, err, Toast.LENGTH_SHORT).show();
+                Log.e(context.getPackageName(), err);
+                break;
+        }
+    }
+
+	@Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
 	}
 
-	private void getCamera() {
-	    try {
-	        camera = Camera.open();
-	    }
-	    catch (final Exception e) {
-	        Toast.makeText(context, "Camera not found!", Toast.LENGTH_SHORT).show();
-	        Log.e("error", "Camera not found!");
-	    }
-	}
 
     @Override
     public void onTabReselected(final Tab tab, final FragmentTransaction fragmentTransaction) {
@@ -115,6 +115,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     }
 
+    /**
+     * Select the item to view.
+     */
     @Override
     public void onTabSelected(final Tab tab, final FragmentTransaction fragmentTransaction) {
         viewPager.setCurrentItem(tab.getPosition());
