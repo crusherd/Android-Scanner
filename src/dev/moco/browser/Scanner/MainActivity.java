@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private Context context = null;
     private ActionBar actionbar = null;
+
+    private SettingsActivity settings = null;
 
     // When requested, this adapter returns a HistoryFragment, BarcodeFragment or QRFragment.
     private ScannerPagerAdapter scannerPagerAdapter = null;
@@ -72,17 +75,29 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             actionbar.addTab(tab);
         }
 
+        settings = new SettingsActivity();
 	}
 
 	/**
-	 * deactivate context options menu
+	 * add context options menu
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 
-		return false;
+	@Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+	    switch (item.getItemId()) {
+        case R.id.action_settings:
+            final Intent intent = new Intent(context, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
 	}
 
 	/**

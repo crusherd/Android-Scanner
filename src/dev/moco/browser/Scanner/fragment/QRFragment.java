@@ -1,11 +1,15 @@
 package dev.moco.browser.Scanner.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.zxing.client.android.CaptureActivity;
+import com.google.zxing.client.android.Intents;
+
 import dev.moco.browser.Scanner.R;
 
 /**
@@ -28,15 +32,11 @@ public class QRFragment extends Fragment {
     }
 
     public void onClick(final View view) {
-
-        Log.d("QR-Code Fragment", "click works!");
-
-        //TODO: currently not working
         //create Scan intent and wait for result
-//        final Intent intent = new Intent(getActivity().getApplicationContext(), CaptureActivity.class);
-//        intent.setAction("com.google.zxing.client.android.SCAN");
-//        intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-//        intent.putExtra("SAVE_HISTORY", false);
-//        startActivityForResult(intent, 0);
+        final Intent intent = new Intent(getActivity().getApplicationContext(), CaptureActivity.class);
+        intent.setAction(Intents.Scan.ACTION);
+        intent.putExtra(Intents.Scan.MODE, Intents.Scan.QR_CODE_MODE);
+        intent.putExtra(Intents.Scan.SAVE_HISTORY, false);
+        startActivity(intent);
     }
 }
