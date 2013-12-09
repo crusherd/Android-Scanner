@@ -16,6 +16,6 @@
         android:maxLines="1"
         android:onClick="onClick"
         android:scrollbars="none"
-        android:text="@string/make_scan"
+        android:text="@string/button_make_scan"
         android:typeface="normal" />
 </RelativeLayout>

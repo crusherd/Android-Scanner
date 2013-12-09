@@ -137,6 +137,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     final Window window = getWindow();
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.capture);
 
     hasSurface = false;
@@ -148,7 +150,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-    showHelpOnFirstLaunch();
+//    showHelpOnFirstLaunch();
   }
 
   @Override

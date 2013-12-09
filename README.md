@@ -3,11 +3,10 @@ Android-Scanner
 
 A small project for Mobile Computing at HTWG Konstanz
 
-This project uses ZXing's core and android app (http://code.google.com/p/zxing/) as library.
+This project uses ZXing's core and android app (http://code.google.com/p/zxing/) as library to scan barcodes and QR-Codes.
 
 For backward compatibility the android support libraries v4 and v7 are used.
 With this it is possible to support API level 10 (Android 2.3.3 and up).
-
 
 ## Used permissions:
 
@@ -80,5 +79,5 @@ With this it is possible to support API level 10 (Android 2.3.3 and up).
 - [ ] Save & display history.
 - [ ] Implement barcode part.
 - [ ] Implement QR-Code part.
-- [ ] Resolve dependencies and add them to repository.
+- [x] Resolve dependencies and add them to repository.
 - [ ] Write tests.

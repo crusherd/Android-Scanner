@@ -1,10 +1,15 @@
 package dev.moco.browser.Scanner.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.zxing.client.android.CaptureActivity;
+import com.google.zxing.client.android.Intents;
+
 import dev.moco.browser.Scanner.R;
 
 /**
@@ -13,16 +18,12 @@ import dev.moco.browser.Scanner.R;
  */
 public class BarcodeFragment extends Fragment {
 
-//    private Camera camera = null;
-//    private Context context = null;
-
     /**
      * When creating the fragment, initialize everything needed.
      */
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        context = getActivity();
     }
 
     /**
@@ -32,54 +33,18 @@ public class BarcodeFragment extends Fragment {
      */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        // The last two arguments ensure LayoutParams are inflated
-        // properly.
+        // The last two arguments ensure LayoutParams are inflated properly.
         final View rootView = inflater.inflate(R.layout.fragment_barcode, container, false);
-//        final SurfaceView surfaceView = (SurfaceView) rootView;
-//        SurfaceHolder holder = (SurfaceHolder) surfaceView.getHandler();
-//        try {
-//            holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-//            camera.setPreviewDisplay(holder);
-//            camera.startPreview();
-//        } catch (final Exception e) {
-//            Log.e("error", e.getMessage());
-//        }
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        getCamera();
+    public void onClick(final View view) {
+        //create Scan intent and wait for result
+        final Intent intent = new Intent(getActivity().getApplicationContext(), CaptureActivity.class);
+        intent.setAction(Intents.Scan.ACTION);
+        intent.putExtra(Intents.Scan.MODE, Intents.Scan.PRODUCT_MODE);
+        intent.putExtra(Intents.Scan.SAVE_HISTORY, false);
+//        intent.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, 0L);
+        startActivity(intent);
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-//        camera.release();
-    }
-
-//    private void getCamera() {
-//        try {
-//            camera = Camera.open();
-//        }
-//        catch (final Exception e) {
-//            Toast.makeText(context, "Camera not found!", Toast.LENGTH_SHORT).show();
-//            Log.e("error", "Camera not found!");
-//        }
-//    }
-//
-//    /**
-//     * Check for camera, flash and autofocus
-//     * @return true if present, false otherwise
-//     */
-//    private boolean checkCameraHardware() {
-//        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) &&
-//            context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS) &&
-//            context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 }

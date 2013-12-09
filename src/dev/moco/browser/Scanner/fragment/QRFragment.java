@@ -3,6 +3,7 @@ package dev.moco.browser.Scanner.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,19 @@ import dev.moco.browser.Scanner.R;
  */
 public class QRFragment extends Fragment {
 
-
+    /**
+     * When creating the fragment, initialize everything needed.
+     */
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * creates the ui for the QR-Code part and returns it.
+     *
+     * @return View to display.
+     */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated properly.
@@ -37,6 +45,15 @@ public class QRFragment extends Fragment {
         intent.setAction(Intents.Scan.ACTION);
         intent.putExtra(Intents.Scan.MODE, Intents.Scan.QR_CODE_MODE);
         intent.putExtra(Intents.Scan.SAVE_HISTORY, false);
-        startActivity(intent);
+        intent.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, 0L);
+        intent.putExtra(Intents.Scan.PROMPT_MESSAGE, getString(R.string.view_scan_qr));
+        final Bundle bundle = getArguments();
+//        bundle.putInt("fragmentID", 2);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        Log.d("test", "test");
     }
 }

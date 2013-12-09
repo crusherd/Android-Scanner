@@ -1,0 +1,6 @@
+<resources>
+    <!-- Strings related to Settings -->
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="pref_delete_history">Verlauf löschen</string>
+    <string name="pref_info">App info</string>
+</resources>

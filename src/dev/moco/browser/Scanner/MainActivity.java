@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 import dev.moco.browser.Scanner.adapter.ScannerPagerAdapter;
+import dev.moco.browser.Scanner.fragment.BarcodeFragment;
 import dev.moco.browser.Scanner.fragment.QRFragment;
 
 /**
@@ -35,13 +36,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//set fullscreen and deactivate standby
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setContentView(R.layout.activity_main);
 		context = getApplicationContext();
 		actionbar = getSupportActionBar();
-
-		//set fullscreen and deactivate standby
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		//disable Home/Up button
 		actionbar.setHomeButtonEnabled(false);
@@ -74,7 +78,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             tab.setTabListener(this);
             actionbar.addTab(tab);
         }
-
         settings = new SettingsActivity();
 	}
 
@@ -85,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -107,8 +110,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	public void onClick(final View view) {
 	    switch (view.getId()) {
             case R.id.qr_button:
-                final QRFragment fragment = (QRFragment) scannerPagerAdapter.getItem(2);
-                fragment.onClick(view);
+                final QRFragment qrFragment = (QRFragment) scannerPagerAdapter.getItem(2);
+                qrFragment.onClick(view);
+                break;
+            case R.id.barcode_button:
+                final BarcodeFragment barFragment = (BarcodeFragment) scannerPagerAdapter.getItem(1);
+                barFragment.onClick(view);
                 break;
             default:
                 final String err = getString(R.string.error_button_not_found);
@@ -120,7 +127,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-
+	    Log.d("test", "test");
 	}
 
 
