@@ -1,11 +1,13 @@
 package dev.moco.browser.Scanner.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.widget.Toast;
+import dev.moco.browser.Scanner.MainActivity;
 import dev.moco.browser.Scanner.R;
 import dev.moco.browser.Scanner.fragment.BarcodeFragment;
 import dev.moco.browser.Scanner.fragment.HistoryFragment;
@@ -22,6 +24,7 @@ import dev.moco.browser.Scanner.fragment.QRFragment;
 public class ScannerPagerAdapter extends FragmentPagerAdapter {
 
     private Context context = null;
+    private Bundle args = null;
     private final int NUMBER_PAGES = 3;
 
     private HistoryFragment historyFragment = null;
@@ -31,11 +34,13 @@ public class ScannerPagerAdapter extends FragmentPagerAdapter {
     /**
      * Creates a new {@link ScannerPagerAdapter}.
      * @param fm - FragmentManager to use.
-     * @param context -
+     * @param context - app context of {@link MainActivity}
+     * @param args - Arguments for the activity to handle.
      */
-	public ScannerPagerAdapter(final FragmentManager fm, final Context context) {
+	public ScannerPagerAdapter(final FragmentManager fm, final Context context, final Bundle args) {
 		super(fm);
 		this.context = context;
+		this.args = args;
 	}
 
 	/**
@@ -50,16 +55,19 @@ public class ScannerPagerAdapter extends FragmentPagerAdapter {
 	        case 0:
 	            if(historyFragment == null) {
 	                historyFragment = new HistoryFragment();
+	                historyFragment.setArguments(args);
 	            }
                 return historyFragment;
 	        case 1:
 	            if(barcodeFragment == null) {
 	                barcodeFragment = new BarcodeFragment();
+	                barcodeFragment.setArguments(args);
 	            }
 	            return barcodeFragment;
 	        case 2:
 	            if(qrFragment == null) {
 	                qrFragment = new QRFragment();
+	                qrFragment.setArguments(args);
 	            }
 	            return qrFragment;
 	        default:
@@ -78,6 +86,12 @@ public class ScannerPagerAdapter extends FragmentPagerAdapter {
 		return NUMBER_PAGES;
 	}
 
+	/**
+	 * Returns the title at the given position
+	 * @param position - Which string to return.
+	 *
+	 * @return String with title
+	 */
 	@Override
     public CharSequence getPageTitle(final int position) {
 	    switch (position) {

@@ -47,13 +47,14 @@ public class QRFragment extends Fragment {
         intent.putExtra(Intents.Scan.SAVE_HISTORY, false);
         intent.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, 0L);
         intent.putExtra(Intents.Scan.PROMPT_MESSAGE, getString(R.string.view_scan_qr));
-        final Bundle bundle = getArguments();
-//        bundle.putInt("fragmentID", 2);
+//        final Bundle bundle = getActivity().getIntent().getExtras();
+        final Bundle args = getArguments();
+        args.putInt("fragmentID", 2);
         startActivityForResult(intent, 0);
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        Log.d("test", "test");
+        Log.d("qr", "test");
     }
 }

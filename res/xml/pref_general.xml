@@ -6,5 +6,6 @@
     <Preference
         android:enabled="true"
         android:key="show_app_info"
+        android:summary="Version: 1.0"
         android:title="@string/pref_info" />
 </PreferenceScreen>

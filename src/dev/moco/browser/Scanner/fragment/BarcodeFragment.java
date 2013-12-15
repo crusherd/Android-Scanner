@@ -3,6 +3,7 @@ package dev.moco.browser.Scanner.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,13 @@ public class BarcodeFragment extends Fragment {
         intent.putExtra(Intents.Scan.MODE, Intents.Scan.PRODUCT_MODE);
         intent.putExtra(Intents.Scan.SAVE_HISTORY, false);
 //        intent.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, 0L);
-        startActivity(intent);
+        final Bundle bundle = getArguments();
+        bundle.putInt("fragmentID", 1);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        Log.d("barcode", "test");
     }
 }

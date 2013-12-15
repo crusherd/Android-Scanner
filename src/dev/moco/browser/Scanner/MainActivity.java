@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     // When requested, this adapter returns a HistoryFragment, BarcodeFragment or QRFragment.
     private ScannerPagerAdapter scannerPagerAdapter = null;
     private ViewPager viewPager = null;
+    private Bundle args = null;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_main);
+
+		args = new Bundle();
 		context = getApplicationContext();
 		actionbar = getSupportActionBar();
 
@@ -61,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionbar.setDisplayUseLogoEnabled(false);
 
 		// ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
-		scannerPagerAdapter = new ScannerPagerAdapter(getSupportFragmentManager(), context);
+		scannerPagerAdapter = new ScannerPagerAdapter(getSupportFragmentManager(), context, args);
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(scannerPagerAdapter);
 		viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -109,13 +112,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	 */
 	public void onClick(final View view) {
 	    switch (view.getId()) {
-            case R.id.qr_button:
-                final QRFragment qrFragment = (QRFragment) scannerPagerAdapter.getItem(2);
-                qrFragment.onClick(view);
-                break;
             case R.id.barcode_button:
                 final BarcodeFragment barFragment = (BarcodeFragment) scannerPagerAdapter.getItem(1);
                 barFragment.onClick(view);
+                break;
+            case R.id.qr_button:
+                final QRFragment qrFragment = (QRFragment) scannerPagerAdapter.getItem(2);
+                qrFragment.onClick(view);
                 break;
             default:
                 final String err = getString(R.string.error_button_not_found);
@@ -127,7 +130,24 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-	    Log.d("test", "test");
+	    if(resultCode == RESULT_OK) {
+	        final int fragmentNumber = args.getInt("fragmentID");
+	        switch (fragmentNumber) {
+            case 1:
+                final BarcodeFragment barFragment = (BarcodeFragment) scannerPagerAdapter.getItem(1);
+                barFragment.onActivityResult(requestCode, resultCode, data);
+                break;
+            case 2:
+                final QRFragment qrFragment = (QRFragment) scannerPagerAdapter.getItem(2);
+                qrFragment.onActivityResult(requestCode, resultCode, data);
+                break;
+            default:
+                final String err = getString(R.string.error_fragment_to_call_not_found);
+                Toast.makeText(context, err, Toast.LENGTH_SHORT).show();
+                Log.e(context.getPackageName(), err);
+                break;
+            }
+	    }
 	}
 
 
