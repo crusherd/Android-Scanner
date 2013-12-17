@@ -43,11 +43,13 @@ public class BarcodeFragment extends Fragment {
         //create Scan intent and wait for result
         final Intent intent = new Intent(getActivity().getApplicationContext(), CaptureActivity.class);
         intent.setAction(Intents.Scan.ACTION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         intent.putExtra(Intents.Scan.MODE, Intents.Scan.PRODUCT_MODE);
         intent.putExtra(Intents.Scan.SAVE_HISTORY, false);
-//        intent.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, 0L);
-        final Bundle bundle = getArguments();
-        bundle.putInt("fragmentID", 1);
+        intent.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, 0L);
+        final Bundle args = getArguments();
+        args.putInt(getString(R.string.fragment_id), R.id.fragment_id_barcode);
         startActivityForResult(intent, 0);
     }
 

@@ -39,8 +39,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		super.onCreate(savedInstanceState);
 
 		//set fullscreen and deactivate standby
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -133,11 +131,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	    if(resultCode == RESULT_OK) {
 	        final int fragmentNumber = args.getInt("fragmentID");
 	        switch (fragmentNumber) {
-            case 1:
+            case R.id.fragment_id_barcode:
                 final BarcodeFragment barFragment = (BarcodeFragment) scannerPagerAdapter.getItem(1);
                 barFragment.onActivityResult(requestCode, resultCode, data);
                 break;
-            case 2:
+            case R.id.fragment_id_qr:
                 final QRFragment qrFragment = (QRFragment) scannerPagerAdapter.getItem(2);
                 qrFragment.onActivityResult(requestCode, resultCode, data);
                 break;

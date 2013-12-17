@@ -80,4 +80,4 @@ With this it is possible to support API level 10 (Android 2.3.3 and up).
 - [ ] Implement barcode part.
 - [ ] Implement QR-Code part.
 - [x] Resolve dependencies and add them to repository.
-- [ ] Write tests.
+- [ ] Write tests. (Working on a Galaxy S3 @ Android 4.1.2)

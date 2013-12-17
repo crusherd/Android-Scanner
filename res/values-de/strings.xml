@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Scanner</string>
     <string name="action_settings">Einstellungen</string>
+    <string name="app_name">Scanner</string>
     <string name="barcode">Barcode</string>
-    <string name="qr_code">QR-Code</string>
-    <string name="history">Verlauf</string>
+    <string name="button_abort">Abbrechen</string>
+    <string name="button_copy">Kopieren</string>
     <string name="button_make_scan">Scannen</string>
+    <string name="button_proceed">Ausführen</string>
+    <string name="error_button_not_found">Fehler: Gewünschten Button nicht gefunden!</string>
+    <string name="error_fragment_not_found">Fehler: Ausgewähltes Fragment nicht gefunden!</string>
+    <string name="error_fragment_to_call_not_found">Fehler: Gewünschtes Fragment nicht gefunden!</string>
+    <string name="error_page_title_not_found">Fehler: Tab-Titel nicht gefunden!</string>
+    <string name="fragment_id">fragmentID</string>
+    <string name="history">Verlauf</string>
+    <string name="message_url">URL:</string>
+    <string name="qr_code">QR-Code</string>
+    <string name="title_text_found">Text gefunden:</string>
+    <string name="title_url_found">URL gefunden:</string>
+    <string name="view_scan_qr">Plazieren Sie einen QR-Code innerhalb des Rechtecks zum Scannen.</string>
 </resources>
