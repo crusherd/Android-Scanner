@@ -151,7 +151,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     public void onTabReselected(final Tab tab, final FragmentTransaction fragmentTransaction) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -165,7 +164,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     public void onTabUnselected(final Tab tab, final FragmentTransaction fragmentTransaction) {
-        // TODO Auto-generated method stub
 
     }
 }

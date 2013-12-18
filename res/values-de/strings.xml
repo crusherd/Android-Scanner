@@ -6,7 +6,7 @@
     <string name="button_abort">Abbrechen</string>
     <string name="button_copy">Kopieren</string>
     <string name="button_make_scan">Scannen</string>
-    <string name="button_proceed">Ausführen</string>
+    <string name="button_open_link">Link öffnen</string>
     <string name="error_button_not_found">Fehler: Gewünschten Button nicht gefunden!</string>
     <string name="error_fragment_not_found">Fehler: Ausgewähltes Fragment nicht gefunden!</string>
     <string name="error_fragment_to_call_not_found">Fehler: Gewünschtes Fragment nicht gefunden!</string>
