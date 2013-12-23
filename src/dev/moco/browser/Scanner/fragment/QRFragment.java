@@ -22,6 +22,7 @@ import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.android.Intents;
 
 import dev.moco.browser.Scanner.R;
+import dev.moco.browser.Scanner.fragment.HistoryFragment.HistoryType;
 
 /**
  * Class for managing QR-Codes.
@@ -46,6 +47,7 @@ public class QRFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated properly.
         final View rootView = inflater.inflate(R.layout.fragment_qr_code, container, false);
+        rootView.setId(R.id.fragment_id_qr);
         return rootView;
     }
 
@@ -71,20 +73,27 @@ public class QRFragment extends Fragment {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setNegativeButton(R.string.button_abort, getAbortListener());
 
+        //save to history
+        HistoryFragment history = (HistoryFragment) getFragmentManager().findFragmentById(R.id.fragment_id_history);
+
         //URL
         if(contents.contains("http://") || contents.contains("https://")) {
+        	history.addEntry(HistoryType.QRCode, "URL", contents);
             createURLDialog(contents, dialogBuilder);
         }
         //Calendar entry
         else if(contents.startsWith("BEGIN:VEVENT")) {
+        	history.addEntry(HistoryType.QRCode, "Calendar", contents);
             createCalendarDialog(contents, dialogBuilder);
         }
         //Contact entry
         else if(contents.startsWith("BEGIN:VCARD")) {
+        	history.addEntry(HistoryType.QRCode, "Contact", contents);
             createContactDialog(contents, dialogBuilder);
         }
         //normal text in QR-Code
         else {
+        	history.addEntry(HistoryType.QRCode, "Text", contents);
             createTextDialog(contents, dialogBuilder);
         }
     }
@@ -148,7 +157,9 @@ public class QRFragment extends Fragment {
     }
 
     private void createContactDialog(final String contents, final AlertDialog.Builder dialogBuilder) {
+    	if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 
+    	}
     }
 
     /**
@@ -203,7 +214,7 @@ public class QRFragment extends Fragment {
                 }
             }
             else if(entry.contains("DTEND")) {
-              //date format: 20060910T220000Z
+                //date format: 20060910T220000Z
                 final SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd'T'kkmmss'Z'");
                 try {
                     end = formater.parse(entry.substring(index + 1));
@@ -216,7 +227,13 @@ public class QRFragment extends Fragment {
         final Intent calendarIntent = new Intent(Intent.ACTION_INSERT);
         //compatibility
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            //TODO: add code here for api < 14
+            calendarIntent.setType("vnd.android.cursor.item/event");
+            calendarIntent.putExtra("title", title);
+            calendarIntent.putExtra("description", description);
+            calendarIntent.putExtra("eventLocation", location);
+            calendarIntent.putExtra("availability", 0);
+            calendarIntent.putExtra("beginTime", begin.getTime());
+            calendarIntent.putExtra("endTime", end.getTime());
         }
         else {
             calendarIntent.setData(Events.CONTENT_URI);

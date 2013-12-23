@@ -2,4 +2,5 @@
 <resources>
     <item name="fragment_id_barcode" type="id"></item>
     <item name="fragment_id_qr" type="id"></item>
+    <item name="fragment_id_history" type="id"></item>
 </resources>
