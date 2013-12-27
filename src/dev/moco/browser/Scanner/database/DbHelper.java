@@ -1,4 +1,4 @@
-package dev.moco.browser.Database;
+package dev.moco.browser.Scanner.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,11 +16,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_CONTENT = "content";
 	public static final String COLUMN_TYPE = "type";
 
-	private final String SQL_CREATE_ENTRIES = "CREATE TABLE" + TABLE_NAME +
+	private final String SQL_CREATE_ENTRIES = "CREATE TABLE " + TABLE_NAME +
 											  " ( " + BaseColumns._ID + " INTEGER PRIMARY KEY, " +
 											  COLUMN_TITLE + " TEXT, " +
 											  COLUMN_CONTENT + " TEXT, " +
-											  COLUMN_TYPE + " TEXT )";
+											  COLUMN_TYPE + " INTEGER )";
 	private final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
 	public DbHelper(Context context, String name, CursorFactory factory,

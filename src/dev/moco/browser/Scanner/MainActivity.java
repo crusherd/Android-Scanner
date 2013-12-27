@@ -48,18 +48,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		context = getApplicationContext();
 		actionbar = getSupportActionBar();
 
-		//disable Home/Up button
-		actionbar.setHomeButtonEnabled(false);
-
-		//activate navigation mode
-		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		//hide actionbar title and icon
-		actionbar.setDisplayShowTitleEnabled(false);
-		actionbar.setDisplayShowHomeEnabled(false);
-
-		actionbar.setDisplayHomeAsUpEnabled(false);
-        actionbar.setDisplayUseLogoEnabled(false);
+		setStartOptions();
 
 		// ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
 		scannerPagerAdapter = new ScannerPagerAdapter(getSupportFragmentManager(), context, args);
@@ -72,13 +61,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		    }
 		});
 
-		//add tab for each section in app
-        for(int i = 0; i < scannerPagerAdapter.getCount(); i++) {
-            final Tab tab = actionbar.newTab();
-            tab.setText(scannerPagerAdapter.getPageTitle(i));
-            tab.setTabListener(this);
-            actionbar.addTab(tab);
-        }
+		addTabs();
         settings = new SettingsActivity();
 	}
 
@@ -148,6 +131,30 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	    }
 	}
 
+	private void setStartOptions() {
+	    //disable Home/Up button
+		actionbar.setHomeButtonEnabled(false);
+
+		//activate navigation mode
+		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		//hide actionbar title and icon
+		actionbar.setDisplayShowTitleEnabled(false);
+		actionbar.setDisplayShowHomeEnabled(false);
+
+		actionbar.setDisplayHomeAsUpEnabled(false);
+        actionbar.setDisplayUseLogoEnabled(false);
+    }
+
+	private void addTabs() {
+	    //add tab for each section in app
+        for(int i = 0; i < scannerPagerAdapter.getCount(); i++) {
+            final Tab tab = actionbar.newTab();
+            tab.setText(scannerPagerAdapter.getPageTitle(i));
+            tab.setTabListener(this);
+            actionbar.addTab(tab);
+        }
+    }
 
     @Override
     public void onTabReselected(final Tab tab, final FragmentTransaction fragmentTransaction) {

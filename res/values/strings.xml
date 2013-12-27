@@ -9,6 +9,7 @@
     <string name="button_make_scan">Scan</string>
     <string name="button_open_link">Open link</string>
     <string name="error_button_not_found">Error: Requested button not found!</string>
+    <string name="error_fragment_cast">Error: Casting fragment unsuccessful!</string>
     <string name="error_fragment_not_found">Error: Selected fragment not found!</string>
     <string name="error_fragment_to_call_not_found">Error: Requested fragment not found!</string>
     <string name="error_page_title_not_found">Error: Page title not found!</string>

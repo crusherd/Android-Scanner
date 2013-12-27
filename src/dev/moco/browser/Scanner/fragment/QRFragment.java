@@ -74,8 +74,9 @@ public class QRFragment extends Fragment {
         dialogBuilder.setNegativeButton(R.string.button_abort, getAbortListener());
 
         //save to history
-        HistoryFragment history = (HistoryFragment) getFragmentManager().findFragmentById(R.id.fragment_id_history);
-
+        //NOTE from docs: This is either the android:id value supplied in a layout or the container view ID supplied when adding the fragment.
+        //TODO: Change this work-around to get the fragment by id not by index.
+        HistoryFragment history = (HistoryFragment) getFragmentManager().getFragments().get(0);
         //URL
         if(contents.contains("http://") || contents.contains("https://")) {
         	history.addEntry(HistoryType.QRCode, "URL", contents);
@@ -158,7 +159,7 @@ public class QRFragment extends Fragment {
 
     private void createContactDialog(final String contents, final AlertDialog.Builder dialogBuilder) {
     	if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-
+    		//TODO: implement!
     	}
     }
 
