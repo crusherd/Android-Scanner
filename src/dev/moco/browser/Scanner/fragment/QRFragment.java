@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,7 @@ public class QRFragment extends Fragment {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        final String contents = data.getStringExtra(Intents.Scan.RESULT);
+        final String content = data.getStringExtra(Intents.Scan.RESULT);
         //create new dialog for user
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setNegativeButton(R.string.button_abort, getAbortListener());
@@ -76,26 +77,26 @@ public class QRFragment extends Fragment {
         //save to history
         //NOTE from docs: This is either the android:id value supplied in a layout or the container view ID supplied when adding the fragment.
         //TODO: Change this work-around to get the fragment by id not by index.
-        HistoryFragment history = (HistoryFragment) getFragmentManager().getFragments().get(0);
+        final HistoryFragment history = (HistoryFragment) getFragmentManager().getFragments().get(0);
         //URL
-        if(contents.contains("http://") || contents.contains("https://")) {
-        	history.addEntry(HistoryType.QRCode, "URL", contents);
-            createURLDialog(contents, dialogBuilder);
+        if(content.contains("http://") || content.contains("https://")) {
+        	history.addEntry(HistoryType.QRCode, "URL", content);
+            createURLDialog(content, dialogBuilder);
         }
         //Calendar entry
-        else if(contents.startsWith("BEGIN:VEVENT")) {
-        	history.addEntry(HistoryType.QRCode, "Calendar", contents);
-            createCalendarDialog(contents, dialogBuilder);
+        else if(content.startsWith("BEGIN:VEVENT")) {
+        	history.addEntry(HistoryType.QRCode, "Calendar", content);
+            createCalendarDialog(content, dialogBuilder);
         }
         //Contact entry
-        else if(contents.startsWith("BEGIN:VCARD")) {
-        	history.addEntry(HistoryType.QRCode, "Contact", contents);
-            createContactDialog(contents, dialogBuilder);
+        else if(content.startsWith("BEGIN:VCARD")) {
+        	history.addEntry(HistoryType.QRCode, "Contact", content);
+            createContactDialog(content, dialogBuilder);
         }
-        //normal text in QR-Code
+        //suppose normal text in QR-Code
         else {
-        	history.addEntry(HistoryType.QRCode, "Text", contents);
-            createTextDialog(contents, dialogBuilder);
+        	history.addEntry(HistoryType.QRCode, "Text", content);
+            createTextDialog(content, dialogBuilder);
         }
     }
 
@@ -110,14 +111,14 @@ public class QRFragment extends Fragment {
         };
     }
 
-    private void createURLDialog(final String contents, final AlertDialog.Builder dialogBuilder) {
+    private void createURLDialog(final String content, final AlertDialog.Builder dialogBuilder) {
         dialogBuilder.setTitle(getString(R.string.title_url_found));
-        dialogBuilder.setMessage(contents);
+        dialogBuilder.setMessage(content);
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                final Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contents));
+                final Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(content));
                 startActivity(urlIntent);
 
             }
@@ -127,14 +128,14 @@ public class QRFragment extends Fragment {
         dialog.show();
     }
 
-    private void createTextDialog(final String contents, final AlertDialog.Builder dialogBuilder) {
+    private void createTextDialog(final String content, final AlertDialog.Builder dialogBuilder) {
         dialogBuilder.setTitle(getString(R.string.title_text_found));
-        dialogBuilder.setMessage(contents);
+        dialogBuilder.setMessage(content);
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                createTextDialogOnClick(contents);
+                createTextDialogOnClick(content);
             }
         };
         dialogBuilder.setPositiveButton(R.string.button_copy, positiveListener);
@@ -142,40 +143,49 @@ public class QRFragment extends Fragment {
         dialog.show();
     }
 
-    private void createCalendarDialog(final String contents, final AlertDialog.Builder dialogBuilder) {
+    private void createCalendarDialog(final String content, final AlertDialog.Builder dialogBuilder) {
         dialogBuilder.setTitle(R.string.title_calendar_event_found);
         dialogBuilder.setMessage(R.string.message_calendar_hint);
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-              createCalendarDialogOnClick(contents);
+              createCalendarDialogOnClick(content);
             }
         };
-        dialogBuilder.setPositiveButton(R.string.button_add_calendar, positiveListener);
+        dialogBuilder.setPositiveButton(R.string.button_add_to_calendar, positiveListener);
         final AlertDialog dialog = dialogBuilder.create();
         dialog.show();
     }
 
-    private void createContactDialog(final String contents, final AlertDialog.Builder dialogBuilder) {
-    	if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-    		//TODO: implement!
-    	}
+    private void createContactDialog(final String content, final AlertDialog.Builder dialogBuilder) {
+        dialogBuilder.setTitle(R.string.title_contact_found);
+        final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                createContactDialogOnClick(content);
+            }
+        };
+
+        dialogBuilder.setPositiveButton(R.string.button_add_to_contacts, positiveListener);
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
     /**
      * NOTE: Suppress is needed due to Lint warning and setting project to not buildable.
      */
     @SuppressLint("NewApi")
-    private void createTextDialogOnClick(final String contents) {
+    private void createTextDialogOnClick(final String content) {
         //check compatibility for API level 11 aka Honeycomb
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
             final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(contents);
+            clipboard.setText(content);
         }
         else {
             final android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            final android.content.ClipData clip = android.content.ClipData.newPlainText("", contents);
+            final android.content.ClipData clip = android.content.ClipData.newPlainText("", content);
             clipboard.setPrimaryClip(clip);
         }
     }
@@ -186,10 +196,12 @@ public class QRFragment extends Fragment {
      * FORMAT: BEGIN:VEVENT\r\nSUMMARY:\r\nDTSTART:\r\nDTEND:\r\nEND:VEVENT
      * <br/>
      * NOTE: Suppress is needed due to Lint warning and setting project to not buildable.
+     *
+     *
      */
     @SuppressLint("NewApi")
-    private void createCalendarDialogOnClick(final String contents) {
-        final String[] splitted = contents.split("\r\n");
+    private void createCalendarDialogOnClick(final String content) {
+        final String[] splitted = content.split("\r\n");
         String title = "", description = "", location = "";
         Date begin = new Date(), end = new Date();
 
@@ -226,7 +238,7 @@ public class QRFragment extends Fragment {
             }
           }
         final Intent calendarIntent = new Intent(Intent.ACTION_INSERT);
-        //compatibility
+        //check compatibility for API level 14 aka Ice Cream Sandwich
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             calendarIntent.setType("vnd.android.cursor.item/event");
             calendarIntent.putExtra("title", title);
@@ -246,5 +258,31 @@ public class QRFragment extends Fragment {
             calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end.getTime());
         }
         startActivity(calendarIntent);
+    }
+
+    /**
+     * IMPORTANT: Uses vCard v3.0 format.
+     * <br/>
+     * FORMAT (example from wikipedia):
+     * BEGIN:VCARD
+     * VERSION:3.0
+     * N:Mustermann;Max
+     * FN:Max Mustermann
+     * ORG:Wikipedia
+     * URL:http://de.wikipedia.org/
+     * EMAIL;TYPE=INTERNET:max.mustermann@example.org
+     * TEL;TYPE=voice,work,pref:+49 1234 56788
+     * ADR;TYPE=intl,work,postal,parcel:;;Musterstraße 1;Musterstadt;;12345;Germany
+     * END:VCARD
+     * <br/>
+     * @param content
+     */
+    private void createContactDialogOnClick(final String content) {
+        final Intent contactIntent = new Intent(android.provider.ContactsContract.Intents.Insert.ACTION);
+        contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+
+        //TODO: implement insertion!
+
+        startActivity(contactIntent);
     }
 }

@@ -1,14 +1,10 @@
 package dev.moco.browser.Scanner.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,23 +30,11 @@ public class HistoryFragment extends Fragment {
 		QRCode
 	};
 
-	public class DBEntry {
-		public String id = null, title = null, content = null;
-		public HistoryType type;
-
-		public DBEntry(String id, HistoryType type, String title, String content) {
-			this.id = id;
-			this.type = type;
-			this.title = title;
-			this.content = content;
-        }
-	};
-
 	private DbHelper dbHelper = null;
 	private SQLiteDatabase db = null;
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dbHelper = new DbHelper(getActivity());
 		db = dbHelper.getWritableDatabase();
@@ -63,13 +47,23 @@ public class HistoryFragment extends Fragment {
 	@Override
     public void onStart() {
 		super.onStart();
-		ListView listView = (ListView) getActivity().findViewById(R.id.fragment_id_history);
-		ProgressBar progressBar = new ProgressBar(getActivity());
+		final ListView listView = (ListView) getActivity().findViewById(R.id.fragment_id_history);
+		final ProgressBar progressBar = new ProgressBar(getActivity());
 		progressBar.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		progressBar.setIndeterminate(true);
 		listView.setEmptyView(progressBar);
 
-		List<DBEntry> contents = getDBContents();
+		final Cursor cursor = dbHelper.getDBContents();
+		final String[] from = {DbHelper.COLUMN_TITLE, DbHelper.COLUMN_CONTENT};
+		final int[] to = {android.R.id.text1, android.R.id.text1};
+		final SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getActivity(),
+												android.R.layout.simple_list_item_1,
+												cursor,
+												from,
+												to);
+		listView.setAdapter(simpleCursorAdapter);
+
+//		List<DBEntry> contents = getDBContents();
 	}
 
 	@Override
@@ -89,50 +83,96 @@ public class HistoryFragment extends Fragment {
     }
 
     /**
-     * Adds an entry to the database with the given information.
+     * Adds an entry to the database with the given information if it is not in the database.
      *
      * @param type - wether its a barcode or QR-Code
      * @param title - Name to display for the element
      * @param content - data from barcode or QR-Code
      */
-    public void addEntry(HistoryType type, String title, String content) {
-    	ContentValues entry = new ContentValues();
-		entry.put(DbHelper.COLUMN_TITLE, title);
-		entry.put(DbHelper.COLUMN_CONTENT, content);
-    	switch(type) {
-	    	case Barcode:
-	    		entry.put(DbHelper.COLUMN_TYPE, 0);
-	    		break;
-	    	case QRCode:
-				entry.put(DbHelper.COLUMN_TYPE, 1);
-	    		break;
-    	}
-    	if(!db.isOpen()) {
-    		db = dbHelper.getWritableDatabase();
-    	}
-    	db.insert(DbHelper.TABLE_NAME, "null", entry);
+    public void addEntry(final HistoryType type, final String title, final String content) {
+    	dbHelper.addEntry(type, title, content);
+//    	if(!isEntryInDB(content)) {
+//	    	ContentValues entry = new ContentValues();
+//			entry.put(DbHelper.COLUMN_TITLE, title);
+//			entry.put(DbHelper.COLUMN_CONTENT, content);
+//	    	switch(type) {
+//		    	case Barcode:
+//		    		entry.put(DbHelper.COLUMN_TYPE, 0);
+//		    		break;
+//		    	case QRCode:
+//					entry.put(DbHelper.COLUMN_TYPE, 1);
+//		    		break;
+//	    	}
+//	    	if(!db.isOpen()) {
+//	    		db = dbHelper.getWritableDatabase();
+//	    	}
+//	    	db.insert(DbHelper.TABLE_NAME, null, entry);
+//    	}
     }
 
-    private List<DBEntry> getDBContents(){
-    	if(!db.isOpen()) {
-    		db = dbHelper.getReadableDatabase();
-    	}
-    	String orderBy = BaseColumns._ID + " DESC";
-		Cursor c = db.query(DbHelper.TABLE_NAME,
-    						null,
-    						null,
-    						null,
-    						null,
-    						null,
-    						orderBy,
-    						null);
-		c.moveToFirst();
-		List<DBEntry> entries = new ArrayList<DBEntry>();
-		while(!c.isAfterLast()) {
-			String title = c.getString(1);
-			String content = c.getString(2);
-			c.moveToNext();
-		}
-    	return entries;
+    /**
+     * Removes an entry with the given content.
+     * @param content - Entry to delete with the given content.
+     */
+    public void removeEntry(final String content) {
+    	dbHelper.removeEntry(content);
     }
+
+//    private List<DBEntry> getDBContents(){
+//    	if(!db.isOpen()) {
+//    		db = dbHelper.getReadableDatabase();
+//    	}
+//    	String[] columns = null;
+//    	String orderBy = BaseColumns._ID + " DESC";
+//		Cursor c = db.query(DbHelper.TABLE_NAME,
+//    						columns,
+//    						null,
+//    						null,
+//    						null,
+//    						null,
+//    						orderBy,
+//    						null);
+//		c.moveToFirst();
+//		List<DBEntry> entries = new ArrayList<DBEntry>();
+//		while(!c.isAfterLast()) {
+//			String title = c.getString(1);
+//			String content = c.getString(2);
+//			HistoryType type;
+//			if(c.getInt(3) == 0) {
+//				type = HistoryType.Barcode;
+//			}
+//			else {
+//				type = HistoryType.QRCode;
+//			}
+//			DBEntry entry = new DBEntry(String.valueOf(c.getInt(0)), type, title, content);
+//			entries.add(entry);
+//			c.moveToNext();
+//		}
+//    	return entries;
+//    }
+
+//    /**
+//     * Checks if contents is present in database.
+//     * @param contents - Contents to add to database.
+//     * @return true if contents is present in database false otherwise.
+//     */
+//    private boolean isEntryInDB(String contents) {
+//    	String selection = " = " + contents;
+//    	String orderBy = BaseColumns._ID + " DESC";
+//    	Cursor c = db.query(DbHelper.TABLE_NAME,
+//				null,
+//				selection,
+//				null,
+//				null,
+//				null,
+//				orderBy,
+//				null);
+//    	c.moveToFirst();
+//    	while(!c.isAfterLast()) {
+//    		if(contents.equals(c.getString(0))) {
+//    			return true;
+//    		}
+//    	}
+//		return false;
+//    }
 }

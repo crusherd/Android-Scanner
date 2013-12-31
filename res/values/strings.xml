@@ -4,7 +4,8 @@
     <string name="app_name">Scanner</string>
     <string name="barcode">Barcode</string>
     <string name="button_abort">Abort</string>
-    <string name="button_add_calendar">Add to calendar</string>
+    <string name="button_add_to_calendar">Add to calendar</string>
+    <string name="button_add_to_contacts">Add to Contacts</string>
     <string name="button_copy">Copy</string>
     <string name="button_make_scan">Scan</string>
     <string name="button_open_link">Open link</string>
@@ -15,9 +16,10 @@
     <string name="error_page_title_not_found">Error: Page title not found!</string>
     <string name="fragment_id">fragmentID</string>
     <string name="history">History</string>
-    <string name="message_calendar_hint">Attention: Please adjust the time(zone) in the entry if wrong.</string>
+    <string name="message_calendar_hint">Attention: Please adjust the entries if they are wrong.</string>
     <string name="qr_code">QR-Code</string>
     <string name="title_calendar_event_found">Calendar event found:</string>
+    <string name="title_contact_found">Contact found:</string>
     <string name="title_text_found">Text found:</string>
     <string name="title_url_found">URL found:</string>
     <string name="view_scan_qr">Place a QR-Code inside the viewfinder rectangle to scan it.</string>
