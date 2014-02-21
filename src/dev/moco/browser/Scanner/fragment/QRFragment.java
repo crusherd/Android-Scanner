@@ -104,10 +104,7 @@ public class QRFragment extends Fragment {
         return new DialogInterface.OnClickListener() {
 
             @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                // TODO Auto-generated method stub
-
-            }
+            public void onClick(final DialogInterface dialog, final int which) { }
         };
     }
 

@@ -18,6 +18,7 @@
     <string name="history">History</string>
     <string name="message_calendar_hint">Attention: Please adjust the entries if they are wrong.</string>
     <string name="qr_code">QR-Code</string>
+    <string name="title_barcode_found">Barcode found:</string>
     <string name="title_calendar_event_found">Calendar event found:</string>
     <string name="title_contact_found">Contact found:</string>
     <string name="title_text_found">Text found:</string>

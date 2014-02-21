@@ -27,8 +27,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private Context context = null;
     private ActionBar actionbar = null;
 
-    private SettingsActivity settings = null;
-
     // When requested, this adapter returns a HistoryFragment, BarcodeFragment or QRFragment.
     private ScannerPagerAdapter scannerPagerAdapter = null;
     private ViewPager viewPager = null;
@@ -62,7 +60,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		});
 
 		addTabs();
-        settings = new SettingsActivity();
 	}
 
 	/**
@@ -158,7 +155,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     public void onTabReselected(final Tab tab, final FragmentTransaction fragmentTransaction) {
-
     }
 
     /**

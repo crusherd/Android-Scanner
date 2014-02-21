@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 import dev.moco.browser.Scanner.fragment.HistoryFragment.HistoryType;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -50,7 +51,6 @@ public class DbHelper extends SQLiteOpenHelper {
 //	public DbHelper(Context context, String name, CursorFactory factory,
 //	        int version, DatabaseErrorHandler errorHandler) {
 //		super(context, name, factory, version, errorHandler);
-//		// TODO Auto-generated constructor stub
 //	}
 
 	@Override
@@ -86,7 +86,8 @@ public class DbHelper extends SQLiteOpenHelper {
 					entry.put(COLUMN_TYPE, 1);
 		    		break;
 	    	}
-	    	db.insert(TABLE_NAME, null, entry);
+	    	final long res = db.insert(TABLE_NAME, null, entry);
+	    	Log.d(DbHelper.class.getName(), String.valueOf(res));
 	    	db.endTransaction();
     	}
     	db.close();
@@ -113,7 +114,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		final SQLiteDatabase db = getReadableDatabase();
 		final String[] columns = {COLUMN_TITLE, COLUMN_CONTENT, COLUMN_TYPE};
 		final String orderBy = BaseColumns._ID + " DESC";
-		final Cursor c = db.query(DbHelper.TABLE_NAME,
+		Cursor c = db.query(DbHelper.TABLE_NAME,
 							columns,
 							null,
 							null,
@@ -121,6 +122,7 @@ public class DbHelper extends SQLiteOpenHelper {
 							null,
 							orderBy,
 							null);
+		c = db.rawQuery("SELECT * FROM history", null);
 //		c.moveToFirst();
 //		List<DBEntry> entries = new ArrayList<DBEntry>();
 //		while(!c.isAfterLast()) {
@@ -137,7 +139,7 @@ public class DbHelper extends SQLiteOpenHelper {
 //			entries.add(entry);
 //			c.moveToNext();
 //		}
-		db.close();
+//		db.close();
 		return c;
 	}
 

@@ -1,9 +1,11 @@
 package dev.moco.browser.Scanner.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,16 @@ import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.android.Intents;
 
 import dev.moco.browser.Scanner.R;
+import dev.moco.browser.Scanner.fragment.HistoryFragment.HistoryType;
 
 /**
  * Fragment for handling the "barcode"-UI part
  * @author Robert Danczak
  */
 public class BarcodeFragment extends Fragment {
+
+    //TODO: complete query
+    private static final String amazonQuery = "http://www.amazon.com";
 
     /**
      * When creating the fragment, initialize everything needed.
@@ -55,6 +61,34 @@ public class BarcodeFragment extends Fragment {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        Log.d("barcode", "test");
+        final String content = data.getStringExtra(Intents.Scan.RESULT);
+        //create new dialog for user
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setNegativeButton(R.string.button_abort, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {}
+        });
+
+        //save to history
+        //NOTE from docs: This is either the android:id value supplied in a layout or the container view ID supplied when adding the fragment.
+        //TODO: Change this work-around to get the fragment by id not by index.
+        final HistoryFragment history = (HistoryFragment) getFragmentManager().getFragments().get(0);
+        history.addEntry(HistoryType.Barcode, "Barcode", content);
+
+        dialogBuilder.setTitle(getString(R.string.title_barcode_found));
+        dialogBuilder.setMessage(content);
+        final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                final Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(amazonQuery + content));
+                startActivity(urlIntent);
+
+            }
+        };
+        dialogBuilder.setPositiveButton(R.string.button_open_link, positiveListener);
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 }

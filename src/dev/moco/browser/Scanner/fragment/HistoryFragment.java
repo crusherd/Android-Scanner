@@ -1,10 +1,9 @@
 package dev.moco.browser.Scanner.fragment;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +30,22 @@ public class HistoryFragment extends Fragment {
 	};
 
 	private DbHelper dbHelper = null;
-	private SQLiteDatabase db = null;
+//	private SQLiteDatabase db = null;
 
 	@Override
     public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dbHelper = new DbHelper(getActivity());
-		db = dbHelper.getWritableDatabase();
-		db.close();
+
+		{
+            dbHelper.addEntry(HistoryType.Barcode, "a barcode", "1234567890");
+            dbHelper.addEntry(HistoryType.QRCode, "a simple QR code", "qr code");
+            dbHelper.addEntry(HistoryType.QRCode, "a url in qr", "http://www.google.de");
+            dbHelper.addEntry(HistoryType.Barcode, "a barcode", "test");
+        }
+
+//		db = dbHelper.getWritableDatabase();
+//		db.close();
 	}
 
 	/**
@@ -47,6 +54,7 @@ public class HistoryFragment extends Fragment {
 	@Override
     public void onStart() {
 		super.onStart();
+
 		final ListView listView = (ListView) getActivity().findViewById(R.id.fragment_id_history);
 		final ProgressBar progressBar = new ProgressBar(getActivity());
 		progressBar.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -54,14 +62,21 @@ public class HistoryFragment extends Fragment {
 		listView.setEmptyView(progressBar);
 
 		final Cursor cursor = dbHelper.getDBContents();
-		final String[] from = {DbHelper.COLUMN_TITLE, DbHelper.COLUMN_CONTENT};
-		final int[] to = {android.R.id.text1, android.R.id.text1};
-		final SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getActivity(),
-												android.R.layout.simple_list_item_1,
-												cursor,
-												from,
-												to);
-		listView.setAdapter(simpleCursorAdapter);
+		cursor.moveToFirst();
+		Log.d("HISTORY", String.valueOf(cursor.getCount()));
+		while(!cursor.isAfterLast()) {
+		    Log.d("HISTORY", cursor.getString(0));
+		}
+
+//		final String[] from = {DbHelper.COLUMN_TITLE, DbHelper.COLUMN_CONTENT, DbHelper.COLUMN_TYPE};
+//		final int[] to = {android.R.id.text1, android.R.id.text1, android.R.id.text1};
+
+//		final SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getActivity(),
+//												android.R.layout.simple_list_item_1,
+//												cursor,
+//												from,
+//												to);
+//		listView.setAdapter(simpleCursorAdapter);
 
 //		List<DBEntry> contents = getDBContents();
 	}
@@ -69,9 +84,9 @@ public class HistoryFragment extends Fragment {
 	@Override
     public void onPause() {
 		super.onPause();
-		if(db != null) {
-	        db.close();
-        }
+//		if(db != null) {
+//	        db.close();
+//        }
 	}
 
     @Override
