@@ -2,8 +2,10 @@ package dev.moco.browser.Scanner.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,7 @@ public class HistoryFragment extends Fragment {
 		QRCode
 	};
 
-	private DbHelper dbHelper = null;
+	private DbHelper dbHelper;
 //	private SQLiteDatabase db = null;
 
 	@Override
@@ -62,21 +64,16 @@ public class HistoryFragment extends Fragment {
 		listView.setEmptyView(progressBar);
 
 		final Cursor cursor = dbHelper.getDBContents();
-		cursor.moveToFirst();
-		Log.d("HISTORY", String.valueOf(cursor.getCount()));
-		while(!cursor.isAfterLast()) {
-		    Log.d("HISTORY", cursor.getString(0));
-		}
+		final String[] from = {DbHelper.COLUMN_TITLE, DbHelper.COLUMN_CONTENT, DbHelper.COLUMN_TYPE, BaseColumns._ID};
+		final int[] to = {android.R.id.text1};
 
-//		final String[] from = {DbHelper.COLUMN_TITLE, DbHelper.COLUMN_CONTENT, DbHelper.COLUMN_TYPE};
-//		final int[] to = {android.R.id.text1, android.R.id.text1, android.R.id.text1};
-
-//		final SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getActivity(),
-//												android.R.layout.simple_list_item_1,
-//												cursor,
-//												from,
-//												to);
-//		listView.setAdapter(simpleCursorAdapter);
+		final SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getActivity(),
+												android.R.layout.simple_list_item_1,
+												cursor,
+												from,
+												to,
+												CursorAdapter.FLAG_AUTO_REQUERY);
+		listView.setAdapter(simpleCursorAdapter);
 
 //		List<DBEntry> contents = getDBContents();
 	}
@@ -106,23 +103,6 @@ public class HistoryFragment extends Fragment {
      */
     public void addEntry(final HistoryType type, final String title, final String content) {
     	dbHelper.addEntry(type, title, content);
-//    	if(!isEntryInDB(content)) {
-//	    	ContentValues entry = new ContentValues();
-//			entry.put(DbHelper.COLUMN_TITLE, title);
-//			entry.put(DbHelper.COLUMN_CONTENT, content);
-//	    	switch(type) {
-//		    	case Barcode:
-//		    		entry.put(DbHelper.COLUMN_TYPE, 0);
-//		    		break;
-//		    	case QRCode:
-//					entry.put(DbHelper.COLUMN_TYPE, 1);
-//		    		break;
-//	    	}
-//	    	if(!db.isOpen()) {
-//	    		db = dbHelper.getWritableDatabase();
-//	    	}
-//	    	db.insert(DbHelper.TABLE_NAME, null, entry);
-//    	}
     }
 
     /**
@@ -132,6 +112,11 @@ public class HistoryFragment extends Fragment {
     public void removeEntry(final String content) {
     	dbHelper.removeEntry(content);
     }
+
+//    @Override
+//    public void onListItemClick(final ListView lv, final View v, final int pos, final long id) {
+//        Log.d(HistoryFragment.class.getName(), "item clicked: " + id);
+//    }
 
 //    private List<DBEntry> getDBContents(){
 //    	if(!db.isOpen()) {

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
 import dev.moco.browser.Scanner.fragment.HistoryFragment.HistoryType;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -28,7 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
 	public class DBEntry {
-		public String id = null, title = null, content = null;
+		public String id, title, content;
 		public HistoryType type;
 
 		public DBEntry(final String id, final HistoryType type, final String title, final String content) {
@@ -86,8 +85,8 @@ public class DbHelper extends SQLiteOpenHelper {
 					entry.put(COLUMN_TYPE, 1);
 		    		break;
 	    	}
-	    	final long res = db.insert(TABLE_NAME, null, entry);
-	    	Log.d(DbHelper.class.getName(), String.valueOf(res));
+	    	db.insert(TABLE_NAME, null, entry);
+	    	db.setTransactionSuccessful();
 	    	db.endTransaction();
     	}
     	db.close();
@@ -112,9 +111,9 @@ public class DbHelper extends SQLiteOpenHelper {
      */
     public Cursor getDBContents(){
 		final SQLiteDatabase db = getReadableDatabase();
-		final String[] columns = {COLUMN_TITLE, COLUMN_CONTENT, COLUMN_TYPE};
+		final String[] columns = {BaseColumns._ID, COLUMN_TITLE, COLUMN_CONTENT, COLUMN_TYPE};
 		final String orderBy = BaseColumns._ID + " DESC";
-		Cursor c = db.query(DbHelper.TABLE_NAME,
+		final Cursor c = db.query(DbHelper.TABLE_NAME,
 							columns,
 							null,
 							null,
@@ -122,12 +121,11 @@ public class DbHelper extends SQLiteOpenHelper {
 							null,
 							orderBy,
 							null);
-		c = db.rawQuery("SELECT * FROM history", null);
-//		c.moveToFirst();
-//		List<DBEntry> entries = new ArrayList<DBEntry>();
+		c.moveToFirst();
+//		final List<DBEntry> entries = new ArrayList<DBEntry>();
 //		while(!c.isAfterLast()) {
-//			String title = c.getString(1);
-//			String content = c.getString(2);
+//			final String title = c.getString(1);
+//			final String content = c.getString(2);
 //			HistoryType type;
 //			if(c.getInt(3) == 0) {
 //				type = HistoryType.Barcode;
@@ -135,7 +133,7 @@ public class DbHelper extends SQLiteOpenHelper {
 //			else {
 //				type = HistoryType.QRCode;
 //			}
-//			DBEntry entry = new DBEntry(String.valueOf(c.getInt(0)), type, title, content);
+//			final DBEntry entry = new DBEntry(String.valueOf(c.getInt(0)), type, title, content);
 //			entries.add(entry);
 //			c.moveToNext();
 //		}
